@@ -6,8 +6,6 @@ services:
       - 'POSTGRES_PASSWORD=username'
       - 'POSTGRES_USER=password'
       - 'PGDATA: /var/lib/postresql/data'
-    ports:
-      - '5432:5432'
     container_name: postgres-sql-bsn
     networks:
       - spring-demo
@@ -16,9 +14,6 @@ services:
   mail-dev:
     container_name: mail-dev-bsn
     image: maildev/maildev
-    ports:
-      - '1080:1080'
-      - '1025:1025'
 
 networks:
   spring-demo:
