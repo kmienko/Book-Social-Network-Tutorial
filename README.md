@@ -17,8 +17,8 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.3.3
 - **Docker**: Facilitates containerization of the backend application for deployment.
 - **buildpacks.io**: Cloud Native Buildpacks (CNBs) transform your application source code into container images
 
-<br>
-Own improvments or trials: 
+
+## Own improvments or trials: 
 - Spring Boot Docker Compose Support: Even less configuration code (done)
 - DevTools with BuildPacks live reload <br>
     -06.09.2024 1st result failed as we deleted hibernate dialect earlier due to lower hint
