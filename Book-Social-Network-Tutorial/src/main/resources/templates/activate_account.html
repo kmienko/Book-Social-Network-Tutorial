@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport">
+    <title>Account Activation</title>
+
+</head>
+<body>
+<div class="container">
+    <h1>Account Activation</h1>
+    <p class="greetings" th:text="'Hi '+${username}+','"></p>
+    <p>Please use code below to finish registration
+        or close if You did not create account by yourself</p>
+    <div class="activation-code"><span th:text="${activation_code}"></span></div>
+    <div class="activation-link">
+        <a th:href="${confirmationUrl}" target="_blank">Activate account</a>
+    </div>
+</div>
+</body>
+</html>

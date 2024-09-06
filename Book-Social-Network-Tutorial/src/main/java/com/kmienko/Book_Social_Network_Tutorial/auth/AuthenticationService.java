@@ -1,13 +1,16 @@
 package com.kmienko.Book_Social_Network_Tutorial.auth;
 
+import com.kmienko.Book_Social_Network_Tutorial.email.EmailTemplateName;
 import com.kmienko.Book_Social_Network_Tutorial.role.RoleRepository;
 import com.kmienko.Book_Social_Network_Tutorial.user.Token;
 import com.kmienko.Book_Social_Network_Tutorial.user.TokenRepository;
 import com.kmienko.Book_Social_Network_Tutorial.user.User;
 import com.kmienko.Book_Social_Network_Tutorial.user.UserRepository;
 import com.kmienko.Book_Social_Network_Tutorial.email.EmailService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +29,11 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
-    private final EmailService emailService; //todo
+    private final EmailService emailService;
+    @Value("${application.mailing.frontend.activation-url}")
+    private String activationUrl;
 
-    public void register(@Valid RegistrationRequest request) {
+    public void register(@Valid RegistrationRequest request) throws MessagingException {
         var userRole = roleRepository.findByName("USER")
                     // todo - as in tutorial better exception later
                 .orElseThrow(() -> new RuntimeException("User role was not initialized"));
@@ -47,9 +52,16 @@ public class AuthenticationService {
 
     }
 
-    private void sendValidationEmail(User user) {
+    private void sendValidationEmail(User user) throws MessagingException {
         var activationCode = generateAndSaveActivationToken(user);
-        //todo - send email with code
+        emailService.sendEmail(
+                user.getEmail(),
+                user.getFullName(),
+                EmailTemplateName.ACTIVATE_ACCOUNT,
+                activationUrl,
+                activationCode,
+                "Account Activation mail"
+        );
     }
 
     private String generateAndSaveActivationToken(User user) {
