@@ -15,15 +15,15 @@ https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.3.3
 - **JSR-303 and Spring Validation**: Enables validation of objects based on annotations.
 - **OpenAPI and Swagger UI Documentation**: Generates documentation for the API endpoints.
 - **Docker**: Facilitates containerization of the backend application for deployment.
-- **buildpacks.io**: Cloud Native Buildpacks (CNBs) transform your application source code into container images
+- **[buildpacks.io](https://buildpacks.io/)**: Cloud Native Buildpacks (CNBs) transform your application source code into container images
 
 
 ## Own improvments or trials: 
 - Spring Boot Docker Compose Support: Even less configuration code (done)
 - DevTools with BuildPacks live reload <br>
-    *06.09.2024 1st result failed as we deleted hibernate dialect earlier due to lower hint
-    *org.hibernate.orm.deprecation : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-    *however buildpacks needs it for some reason, after restored in application properties I created an image with mvn spring-boot:build-image and run it 
-    *but it was main application only in one container without mailer and postgres so I have to get more knowledge in docker compose config
+    +06.09.2024 1st result failed as we deleted hibernate dialect earlier due to lower hint
+    +org.hibernate.orm.deprecation : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+    +however buildpacks needs it for some reason, after restored in application properties I created an image with mvn spring-boot:build-image and run it 
+    but it was main application only in one container without mailer and postgres so I have to get more knowledge in docker compose config
 
   
