@@ -1,5 +1,6 @@
 package com.kmienko.Book_Social_Network_Tutorial.security;
 
+import com.kmienko.Book_Social_Network_Tutorial.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -39,14 +41,17 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody();
     }
+    public String generateToken(
+            UserDetails userDetails
+    ) {
+        return generateToken(new HashMap<>(), userDetails);
+    }
 
-    private String generateToken(
+    public String generateToken(
             Map<String,Object> claims,
-            UserDetails userDetails,
-            long jwtExpiration
-            ) {
+            UserDetails userDetails
+    ) {
         return buildToken(claims, userDetails, jwtExpiration);
-        
     }
 
     private String buildToken(Map<String, Object> extraClaims,
