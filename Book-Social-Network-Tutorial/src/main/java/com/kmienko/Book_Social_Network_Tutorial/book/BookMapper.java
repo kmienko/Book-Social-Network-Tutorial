@@ -1,0 +1,33 @@
+package com.kmienko.Book_Social_Network_Tutorial.book;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class BookMapper {
+
+    public Book toBook(BookRequest request) {
+        return Book.builder()
+                .id(request.id())
+                .title(request.title())
+                .authorName(request.authorName())
+                .synopsis(request.synopsis())
+                .archived(false)
+                .sharable(request.sharable())
+                .build();
+    }
+
+    public BookResponse toBookResponse(Book book) {
+        return BookResponse.builder()
+                .id(book.getId())
+                .title(book.getTitle())
+                .authorName(book.getAuthorName())
+                .isbn(book.getIsbn())
+                .synopsis(book.getSynopsis())
+                .rate(book.getRate())
+                .archived(book.isArchived())
+                .sharable(book.isSharable())
+                .owner(book.getOwner().getFullName())
+                //.cover()
+                .build();
+    }
+}
