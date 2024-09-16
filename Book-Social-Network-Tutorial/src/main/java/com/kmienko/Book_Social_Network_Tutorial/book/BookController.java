@@ -27,4 +27,13 @@ public class BookController {
     public ResponseEntity<BookResponse> findBookById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.findById(id));
     }
+
+    @GetMapping //with paging
+    public ResponseEntity<PageResponse<BookResponse>> findAllBooks(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            Authentication connectedUser
+    ){
+        return ResponseEntity.ok(service.findAllBooks(page, size, connectedUser));
+    }
 }
