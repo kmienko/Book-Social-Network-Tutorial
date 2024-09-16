@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BorrowedBookResponse extends BookResponse {
+public class BookHistoryResponse extends BookResponse {
     private boolean returned;
     private boolean returnedApproved;
 }

@@ -40,21 +40,21 @@ public class BookService {
         User user = (User) connectedUser.getPrincipal();
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<Book> books = bookRepository.findAllShareableBooks(pageable, user.getUserId());
-        return buildPageResponseBook(books);
+        return buildPageBookResponse(books);
     }
 
     public PageResponse<BookResponse> findAllBooksByOwner(int page, int size, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<Book> books = bookRepository.findAll(BookSpecification.withOwnerId(user.getUserId()),pageable);
-        return buildPageResponseBook(books);
+        return buildPageBookResponse(books);
     }
 
-    private PageResponse<BookResponse> buildPageResponseBook(Page<Book> books){
-        List<BookResponse> bookResponse = books.stream()
+    private PageResponse<BookResponse> buildPageBookResponse(Page<Book> books){
+        List<BookResponse> bookResponses = books.stream()
                 .map(bookMapper::toBookResponse).toList();
         return new PageResponse<>(
-                bookResponse,
+                bookResponses,
                 books.getNumber(),
                 books.getSize(),
                 books.getTotalElements(),
@@ -64,21 +64,31 @@ public class BookService {
         );
     }
 
-    public PageResponse<BorrowedBookResponse> findAllBorrowedBooks(int page, int size, Authentication connectedUser) {
+    private PageResponse<BookHistoryResponse> buildPageBookHistoryResponse(Page<BookTransactionHistory> bookHistory){
+        List<BookHistoryResponse> borrowedBookResponses = bookHistory.stream()
+                .map(bookMapper::toBookHistoryResponse).toList();
+        return new PageResponse<>(
+                borrowedBookResponses,
+                bookHistory.getNumber(),
+                bookHistory.getSize(),
+                bookHistory.getTotalElements(),
+                bookHistory.getTotalPages(),
+                bookHistory.isFirst(),
+                bookHistory.isLast()
+        );
+    }
+
+    public PageResponse<BookHistoryResponse> findAllBorrowedBooks(int page, int size, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
-        Page<BookTransactionHistory> allBorrowedBooks = transactionHistoryRepo.findAllBorrowedBooks(pageable, user.getUserId());
+        Page<BookTransactionHistory> borrowedBooks = transactionHistoryRepo.findAllBorrowedBooks(pageable, user.getUserId());
+        return buildPageBookHistoryResponse(borrowedBooks);
+    }
 
-        List<BorrowedBookResponse> bookResponse = allBorrowedBooks.stream()
-                .map(bookMapper::toBorrowedBookResponse).toList();
-        return new PageResponse<>(
-                bookResponse,
-                allBorrowedBooks.getNumber(),
-                allBorrowedBooks.getSize(),
-                allBorrowedBooks.getTotalElements(),
-                allBorrowedBooks.getTotalPages(),
-                allBorrowedBooks.isFirst(),
-                allBorrowedBooks.isLast()
-        );
+    public PageResponse<BookHistoryResponse> findAllReturnedBooks(int page, int size, Authentication connectedUser) {
+        User user = (User) connectedUser.getPrincipal();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Page<BookTransactionHistory> returnedBooks = transactionHistoryRepo.findAllReturnedBooks(pageable, user.getUserId());
+        return buildPageBookHistoryResponse(returnedBooks);
     }
 }

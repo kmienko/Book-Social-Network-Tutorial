@@ -10,4 +10,11 @@ import org.springframework.stereotype.Repository;
 public interface BookTransactionHistoryRepository extends JpaRepository<BookTransactionHistory, Integer> {
   @Query("Select history from BookTransactionHistory history where history.user.userId = :userId")
   Page<BookTransactionHistory> findAllBorrowedBooks(Pageable pageable, Integer userId);
+
+  @Query("""
+          Select history
+          from BookTransactionHistory history
+          where history.book.owner.userId = :userId
+          """)//Java 15 multi line String
+  Page<BookTransactionHistory> findAllReturnedBooks(Pageable pageable, Integer userId);
 }
