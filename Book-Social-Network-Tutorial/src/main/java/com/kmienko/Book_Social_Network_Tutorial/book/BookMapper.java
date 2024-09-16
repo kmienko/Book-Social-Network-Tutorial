@@ -1,5 +1,6 @@
 package com.kmienko.Book_Social_Network_Tutorial.book;
 
+import com.kmienko.Book_Social_Network_Tutorial.history.BookTransactionHistory;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +28,18 @@ public class BookMapper {
                 .archived(book.isArchived())
                 .sharable(book.isShareable())
                 .owner(book.getOwner().getFullName())
+                //.cover()
+                .build();
+    }
+    public BorrowedBookResponse toBorrowedBookResponse(BookTransactionHistory history) {
+        return BorrowedBookResponse.builder()
+                .id(history.getBook().getId())
+                .title(history.getBook().getTitle())
+                .authorName(history.getBook().getAuthorName())
+                .isbn(history.getBook().getIsbn())
+                .rate(history.getBook().getRate())
+                .returned(history.isReturned())
+                .returnedApproved(history.isReturnedApproved())
                 //.cover()
                 .build();
     }

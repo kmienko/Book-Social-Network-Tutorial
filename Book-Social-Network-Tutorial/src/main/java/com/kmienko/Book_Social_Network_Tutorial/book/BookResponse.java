@@ -1,12 +1,13 @@
 package com.kmienko.Book_Social_Network_Tutorial.book;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 public class BookResponse {
 
     private Integer id;
