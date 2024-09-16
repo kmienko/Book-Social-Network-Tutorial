@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class Book extends BaseEntity {
     private String synopsis;
     private String bookCover;
     private boolean archived;
-    private boolean sharable;
+    private boolean shareable;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
