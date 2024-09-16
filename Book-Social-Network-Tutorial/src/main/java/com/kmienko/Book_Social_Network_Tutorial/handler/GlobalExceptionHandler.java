@@ -1,5 +1,6 @@
 package com.kmienko.Book_Social_Network_Tutorial.handler;
 
+import com.kmienko.Book_Social_Network_Tutorial.exception.OperationNotPermittedException;
 import jakarta.mail.MessagingException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -53,6 +54,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleException(MessagingException exp){
         return ResponseEntity
                 .status(INTERNAL_SERVER_ERROR).body(ExceptionResponse.builder()
+                        .error(exp.getMessage())
+                        .build()
+                );
+    }
+
+    @ExceptionHandler(OperationNotPermittedException.class)
+    public ResponseEntity<ExceptionResponse> handleException(OperationNotPermittedException exp){
+        return ResponseEntity
+                .status(BAD_REQUEST).body(ExceptionResponse.builder()
                         .error(exp.getMessage())
                         .build()
                 );

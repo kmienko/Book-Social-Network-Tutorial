@@ -1,5 +1,6 @@
 package com.kmienko.Book_Social_Network_Tutorial.book;
 
+import com.kmienko.Book_Social_Network_Tutorial.exception.OperationNotPermittedException;
 import com.kmienko.Book_Social_Network_Tutorial.history.BookTransactionHistory;
 import com.kmienko.Book_Social_Network_Tutorial.history.BookTransactionHistoryRepository;
 import com.kmienko.Book_Social_Network_Tutorial.user.User;
@@ -13,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -90,5 +92,16 @@ public class BookService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<BookTransactionHistory> returnedBooks = transactionHistoryRepo.findAllReturnedBooks(pageable, user.getUserId());
         return buildPageBookHistoryResponse(returnedBooks);
+    }
+
+    public Integer updateShareableStatus(Integer bookId, Authentication connectedUser) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("No book found with ID: "+bookId));
+        User user = (User) connectedUser.getPrincipal();
+        if(!Objects.equals(book.getOwner().getUserId(), user.getUserId())){
+            throw new OperationNotPermittedException("Cannot update not your book");
+        }
+        book.setShareable(!book.isShareable());
+        return bookId;
     }
 }
