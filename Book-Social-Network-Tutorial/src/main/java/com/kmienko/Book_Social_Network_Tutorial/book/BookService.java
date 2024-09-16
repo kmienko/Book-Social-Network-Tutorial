@@ -99,7 +99,7 @@ public class BookService {
                 .orElseThrow(() -> new EntityNotFoundException("No book found with ID: "+bookId));
         User user = (User) connectedUser.getPrincipal();
         if(!Objects.equals(book.getOwner().getUserId(), user.getUserId())){
-            throw new OperationNotPermittedException("Cannot update not your book");
+            throw new OperationNotPermittedException("You cannot update not your book");
         }
         book.setShareable(!book.isShareable());
         return bookId;
@@ -110,9 +110,29 @@ public class BookService {
                 .orElseThrow(() -> new EntityNotFoundException("No book found with ID: "+bookId));
         User user = (User) connectedUser.getPrincipal();
         if(!Objects.equals(book.getOwner().getUserId(), user.getUserId())){
-            throw new OperationNotPermittedException("Cannot update not your book");
+            throw new OperationNotPermittedException("You cannot update not your book");
         }
         book.setArchived(!book.isArchived());
         return bookId;
+    }
+
+    public Integer borrowBook(Integer bookId, Authentication connectedUser) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("No book found with ID: "+bookId));
+        if(book.isArchived() || !book.isShareable())
+            throw new OperationNotPermittedException("You cannot borrow selected book");
+        User user = (User) connectedUser.getPrincipal();
+        if(Objects.equals(book.getOwner().getUserId(), user.getUserId()))
+            throw new OperationNotPermittedException("You cannot borrow your own book");
+        final boolean isAlreadyBorrowed = transactionHistoryRepo.isAlreadyBorrowedByUser(bookId, user.getUserId());
+        if(isAlreadyBorrowed)
+            throw new OperationNotPermittedException("Selected book is already borrowed");
+        BookTransactionHistory bookTransactionHistory = BookTransactionHistory.builder()
+                .user(user)
+                .book(book)
+                .returned(false)
+                .returnedApproved(false)
+                .build();
+        return transactionHistoryRepo.save(bookTransactionHistory).getId();
     }
 }
