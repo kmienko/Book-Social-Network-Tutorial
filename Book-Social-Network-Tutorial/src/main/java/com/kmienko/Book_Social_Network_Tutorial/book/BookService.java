@@ -1,6 +1,7 @@
 package com.kmienko.Book_Social_Network_Tutorial.book;
 
 import com.kmienko.Book_Social_Network_Tutorial.exception.OperationNotPermittedException;
+import com.kmienko.Book_Social_Network_Tutorial.file.FileStorageService;
 import com.kmienko.Book_Social_Network_Tutorial.history.BookTransactionHistory;
 import com.kmienko.Book_Social_Network_Tutorial.history.BookTransactionHistoryRepository;
 import com.kmienko.Book_Social_Network_Tutorial.user.User;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +25,7 @@ public class BookService {
     private final BookMapper bookMapper;
     private final BookRepository bookRepository;
     private final BookTransactionHistoryRepository transactionHistoryRepo;
+    private final FileStorageService fileStorageService;
 
     public Integer save(BookRequest request, Authentication connctedUser) {
         User user = (User) connctedUser.getPrincipal();
@@ -166,5 +169,14 @@ public class BookService {
                         .orElseThrow(()-> new OperationNotPermittedException("The book is not returned yet."));
         bookTransactionHistory.setReturnedApproved(true);
         return transactionHistoryRepo.save(bookTransactionHistory).getId();
+    }
+
+    public void uploadBookCoverPicture(Integer bookId, Authentication connectedUser, MultipartFile file) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("No book found with ID: "+bookId));
+        User user = (User) connectedUser.getPrincipal();
+        var bookCover = fileStorageService.saveFile(file,user.getUserId());
+        book.setBookCover(bookCover);
+        bookRepository.save(book);
     }
 }

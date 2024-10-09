@@ -1,12 +1,15 @@
 package com.kmienko.Book_Social_Network_Tutorial.book;
 
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("books")
@@ -102,5 +105,14 @@ public class BookController {
         return ResponseEntity.ok(service.approveReturnBorrowedBook(id, connectedUser));
     }
 
-
+    @PostMapping(value = "/cover/{id}", consumes = "multipart/form-data")
+    public ResponseEntity<?> uploadBookCoverPicture(
+            @PathVariable Integer id,
+            @Parameter()
+            @RequestPart("file") MultipartFile file,
+            Authentication connectedUser
+    ){
+        service.uploadBookCoverPicture(file, connectedUser, id);
+        return ResponseEntity.accepted().build();
+    }
 }
