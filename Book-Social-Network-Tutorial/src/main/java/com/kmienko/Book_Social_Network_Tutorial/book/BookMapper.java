@@ -1,6 +1,6 @@
 package com.kmienko.Book_Social_Network_Tutorial.book;
 
-import com.kmienko.Book_Social_Network_Tutorial.book.file.FileUtils;
+import com.kmienko.Book_Social_Network_Tutorial.file.FileUtils;
 import com.kmienko.Book_Social_Network_Tutorial.history.BookTransactionHistory;
 import org.springframework.stereotype.Service;
 

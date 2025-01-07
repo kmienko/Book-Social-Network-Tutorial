@@ -1,4 +1,4 @@
-package com.kmienko.Book_Social_Network_Tutorial.book.file;
+package com.kmienko.Book_Social_Network_Tutorial.file;
 
 import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
