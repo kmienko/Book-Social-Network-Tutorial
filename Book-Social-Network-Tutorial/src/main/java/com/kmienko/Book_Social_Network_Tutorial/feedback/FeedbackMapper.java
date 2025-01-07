@@ -3,6 +3,8 @@ package com.kmienko.Book_Social_Network_Tutorial.feedback;
 import com.kmienko.Book_Social_Network_Tutorial.book.Book;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class FeedbackMapper {
     public Feedback toFeedback(FeedbackRequest request){
@@ -10,6 +12,14 @@ public class FeedbackMapper {
                 .note(request.note())
                 .comment(request.comment())
                 .book(Book.builder().id(request.bookId()).build())
+                .build();
+    }
+
+    public FeedbackResponse toFeedbackResponse(Feedback feedback, Integer userId) {
+        return FeedbackResponse.builder()
+                .note(feedback.getNote())
+                .comment(feedback.getComment())
+                .ownFeedback(Objects.equals(userId, feedback.getCreatedBy()))
                 .build();
     }
 }
