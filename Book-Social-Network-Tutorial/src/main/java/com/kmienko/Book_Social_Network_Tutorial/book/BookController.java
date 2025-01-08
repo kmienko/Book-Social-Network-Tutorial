@@ -112,7 +112,7 @@ public class BookController {
             @RequestPart("file") MultipartFile file,
             Authentication connectedUser
     ){
-        service.uploadBookCoverPicture(file, connectedUser, id);
+        service.uploadBookCoverPicture(id, connectedUser, file);
         return ResponseEntity.accepted().build();
     }
 }
